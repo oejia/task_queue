@@ -56,6 +56,7 @@ def execute(conf_attrs, dbname, uid, obj, method, *args, **kwargs):
         try:
             Model = env[obj]
             args = list(args)
+            _logger.info('>>> %s'%str(args))
             ids = args.pop(0)
             if ids:
                 target = Model.search([('id', 'in', ids)])
@@ -66,13 +67,15 @@ def execute(conf_attrs, dbname, uid, obj, method, *args, **kwargs):
             env.cr.commit()
         except Exception as exc:
             env.cr.rollback()
-            try:
-                raise execute.retry(
-                    queue=execute.request.delivery_info['routing_key'],
-                    exc=exc, countdown=(execute.request.retries + 1) * 60,
-                    max_retries=5)
-            except Exception as retry_exc:
-                raise retry_exc
+            import traceback;traceback.print_exc()
+            raise exc
+            #try:
+            #    raise execute.retry(
+            #        queue=execute.request.delivery_info['routing_key'],
+            #        exc=exc, countdown=(execute.request.retries + 1) * 60,
+            #        max_retries=5)
+            #except Exception as retry_exc:
+            #    raise retry_exc
         finally:
             env.cr.close()
     return True
