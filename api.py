@@ -9,6 +9,8 @@ from .tasks import execute
 _logger = logging.getLogger('Celery Queue')
 celery_default_queue = config.get('celery_default_queue', 'odoo10')
 
+enqueue_fail_then_exec = False
+
 class _CeleryTask(object):
 
     def __init__(self, *args, **kwargs):
@@ -83,15 +85,18 @@ class Async(object):
         token = sha1(f.__name__).hexdigest()
 
         def f_job(*args, **kwargs):
+            _logger.info('>>>> call %s %s'%(str(args), str(kwargs)))
             if len(args) == 1 or args[-1] != token:
-                args += (token,)
-                osv_object = args[0]._name
+                # 加入任务队列
+                args += (token,) # 普通参数尾部增加一个标志参数
+                osv_object = args[0]._name # 第一个参数为 self
                 argspecargs = tuple(getargspec(f).args) + (None,) * 4
                 arglist = list(args)
-                _logger.info(str(arglist))
+
                 obj_ids = None
                 if argspecargs[1] not in ('cr', 'cursor') and \
                         hasattr(f, '_api'):
+                    # 当为新API时
                     cr, uid, context = args[0].env.cr, args[0].env.uid, \
                         dict(args[0].env.context)
                     obj = arglist.pop(0)
@@ -106,23 +111,27 @@ class Async(object):
                     #kwargs['context'] = context
                     #dbname = cr.dbname
                 else:
+                    # 当为老API时
                     cr, uid, context = args[0].env.cr, args[0].env.uid, \
                         dict(args[0].env.context)
                     #arglist.pop(0)  # Remove self
                     #cr = arglist.pop(0)
                     #uid = arglist.pop(0)
                 kwargs['context'] = context
+
                 dbname = cr.dbname
                 fname = f.__name__
                 # Pass OpenERP server config to the worker
                 conf_attrs = dict(
                     [(attr, value) for attr, value in config.options.items()]
                 )
+                # 拼接任务参数
                 task_args = (conf_attrs, dbname, uid, osv_object, fname)
                 #if obj_ids:
                 task_args += (obj_ids,)
                 if arglist:
                     task_args += tuple(arglist)
+
                 try:
                     celery_task = execute.apply_async(
                         args=task_args, kwargs=kwargs,
@@ -135,14 +144,21 @@ class Async(object):
                                     celery_task and celery_task.id))
                     return celery_task.id
                 except Exception as exc:
-                    if args[-1] == token:
-                        args = args[:-1]
-                    _logger.error(
-                        'Celery enqueue task failed %s.%s '
-                        'executing task now '
-                        'Exception: %s' % (osv_object, fname, exc))
-                    return f(*args, **kwargs)
+                    # 入队失败时
+                    import traceback;traceback.print_exc()
+                    if enqueue_fail_then_exec:
+                        kwargs.pop('context')
+                        if args[-1] == token:
+                            args = args[:-1]
+                        _logger.error(
+                            'Celery enqueue task failed %s.%s '
+                            'executing task now '
+                            'Exception: %s' % (osv_object, fname, exc))
+                        return f(*args, **kwargs)
+                    else:
+                        raise exc
             else:
+                # 工作进程时直接执行
                 args = args[:-1]
                 return f(*args, **kwargs)
         return f_job
