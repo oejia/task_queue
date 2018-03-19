@@ -10,7 +10,7 @@ _logger = logging.getLogger('Celery Worker')
 
 
 
-app = Celery('celery_queue',broker='redis://localhost')
+app = Celery('celery_queue')
 
 
 class CeleryConfig():
