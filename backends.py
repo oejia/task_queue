@@ -10,7 +10,6 @@ from sqlalchemy.types import PickleType
 from celery import states
 from celery.five import python_2_unicode_compatible
 
-from odoo.tools import config
 
 @python_2_unicode_compatible
 class Task(ResultModelBase):
@@ -52,7 +51,8 @@ database.Task  = Task
 class ExtDatabaseBackend(DatabaseBackend):
 
     def __init__(self, dburi=None, engine_options=None, url=None, **kwargs):
-        url = config.get('celery_result_backend_db')
+        conf = kwargs['app'].conf
+        url = getattr(conf,'result_backend_db', None)
         super(ExtDatabaseBackend, self).__init__(dburi=dburi, engine_options=engine_options, url=url, **kwargs)
 
     @retry
