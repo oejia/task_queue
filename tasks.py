@@ -23,11 +23,11 @@ class CeleryConfig():
     CELERY_DEFAULT_QUEUE = celery_default_queue
     CELERY_QUEUES = (
         Queue(celery_default_queue, Exchange(celery_default_queue),
-              routing_key=celery_default_queue),
+              routing_key=celery_default_queue, durable=True),
     )
     for queue in filter(lambda q: q.strip(), celery_queues.split(",")):
         CELERY_QUEUES = CELERY_QUEUES + \
-            (Queue(queue, Exchange(queue), routing_key=queue),)
+            (Queue(queue, Exchange(queue), routing_key=queue, durable=True),)
 
 app.config_from_object(CeleryConfig)
 
