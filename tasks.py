@@ -31,6 +31,11 @@ class CeleryConfig():
 
 app.config_from_object(CeleryConfig)
 
+if config.get('celery_result_backend_db'):
+    app.conf.result_backend = 'odoo.addons.task_queue.backends.ExtDatabaseBackend'#'db+postgresql://user:passwd@localhost/celery_result'
+    app.conf.task_ignore_result = True
+    app.conf.task_store_errors_even_if_ignored = True
+
 
 @app.task
 def add(x,y):
