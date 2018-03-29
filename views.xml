@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mro_article_view_tree" model="ir.ui.view">
+            <field name="name">task.result.view_tree</field>
+            <field name="model">task.result</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="任务执行结果" create="false" delete="false" duplicate="false">
+                    <field name="task_id"/>
+                    <field name="task_name"/>
+                    <field name="task_args"/>
+                    <field name="task_kwargs"/>
+                    <field name="status"/>
+                    <field name="date_done"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mro_article_view_form" model="ir.ui.view">
+            <field name="name">task.result.view_form</field>
+            <field name="model">task.result</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="任务执行结果" create="false" delete="false" duplicate="false" edit="false">
+                    <header>
+                        <button name="re_execute" type="object" string="重新执行"/> 
+                    </header>
+					<sheet>
+                    <group>
+                        <field name="task_id"/>
+                        <field name="task_name"/>
+                        <field name="task_args"/>
+                        <field name="task_kwargs"/>
+                        <field name="status"/>
+                        <field name="date_done"/>
+                        <field name="traceback"/>
+                    </group>
+					</sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="task_result_action" model="ir.actions.act_window">
+            <field name="name">任务执行结果</field>
+            <field name="res_model">task.result</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+        </record>
+
+        <menuitem id="menu_task_result" name="异步任务"
+            parent="base.menu_custom" sequence="31"
+            action="task_result_action" groups="base.group_no_one"/>
+
+    </data>
+</odoo>

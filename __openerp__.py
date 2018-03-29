@@ -4,7 +4,9 @@
         'base'
     ],
     'author': '',
-    'data': [],
+    'data': [
+        'views.xml'
+    ],
     'installable': True,
     'application': False,
     'external_dependencies': {
