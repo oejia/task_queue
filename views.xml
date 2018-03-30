@@ -24,7 +24,7 @@
             <field name="arch" type="xml">
                 <form string="任务执行结果" create="false" delete="false" duplicate="false" edit="false">
                     <header>
-                        <button name="re_execute" type="object" string="重新执行"/> 
+			<button name="re_execute" type="object" string="重新执行" attrs="{'invisible':[('status','=', 're_executed')]}"/>
                     </header>
 					<sheet>
                     <group>
