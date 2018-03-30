@@ -2,13 +2,13 @@
 Odoo async task module with celery
 
 # 安装
-pip install celery==4.1.0
-pip install sqlalchemy (如果需要存储任务执行结果的话)
-pip install redis (如果使用redis作为消息存储后端)
+- pip install celery==4.1.0
+- pip install sqlalchemy (如果需要存储任务执行结果的话)
+- pip install redis (如果使用redis作为消息存储后端)
 
 # 配置
 在 odoo 的 conf 配置文件中可用的配置项:
-```
+```shell
 # 消息存储后端
 celery_broker_url = redis://localhost
 
@@ -23,7 +23,7 @@ celery_queues = queue1, queue2, queue3
 ```
 
 # 使用
-```
+```python
 from odoo.addons.task_queue.api import Async
 
 @Aysnc()
@@ -45,7 +45,7 @@ def func2(self, a, b):
 
 # Worker的运行
 参考如下task_worker.py 代码：
-```
+```python
 # coding=utf-8
 
 __import__('pkg_resources').declare_namespace('odoo.addons')
