@@ -29,17 +29,19 @@ from odoo.addons.task_queue.api import Async
 @Aysnc()
 @api.model
 def func(self, a, b):
-  pass
-  
+    pass
+
+
 @Aysnc(queue='queue1')
 @api.multi
 def func1(self, a, b):
-  pass
-  
+    pass
+
+
 @Aysnc(queue='queue2')
 @api.one
 def func2(self, a, b):
-  pass
+    pass
 ```
 注意：确保方法的参数均为可序列化的python内置类型
 
