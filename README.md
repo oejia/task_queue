@@ -3,12 +3,12 @@ Odoo async task module with celery
 
 # 安装
 - pip install celery==4.1.0
-- pip install sqlalchemy (如果需要存储任务执行结果的话)
-- pip install redis (如果使用redis作为消息存储后端)
+- pip install sqlalchemy    (如果需要存储任务执行结果的话)
+- pip install redis    (如果使用redis作为消息存储后端)
 
 # 配置
 在 odoo 的 conf 配置文件中可用的配置项:
-```shell
+```config
 # 消息存储后端
 celery_broker_url = redis://localhost
 
