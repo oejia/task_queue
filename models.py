@@ -56,7 +56,7 @@ class TaskResult(models.Model):
 
         for obj in self:
             celery_task = execute.apply_async(
-                args=[''] + eval(obj.task_args), kwargs=eval(obj.task_kwargs),
+                args=[{'xmlrpc_port':''}] + eval(obj.task_args), kwargs=eval(obj.task_kwargs),
                 countdown=countdown, eta=eta,
                 expires=expires, priority=priority,
                 queue=queue)
