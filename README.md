@@ -45,7 +45,9 @@ def func2(self, a, b):
 ```
 注意：确保方法的参数均为可序列化的python内置类型
 
-在调用前如果异步任务执行时会引用到刚变动的记录请执行下数据库commit使变动确实生效
+在调用前如果异步任务执行时会引用到刚变动的记录请执行下数据库 commit 使变动确实生效
+
+多进程worker同时跑时可能会出现odoo的事务错误，建议odoo中多使用autocommit=True的模式操作数据库
 
 # Worker的运行
 参考如下task_worker.py 代码：
