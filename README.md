@@ -45,6 +45,8 @@ def func2(self, a, b):
 ```
 注意：确保方法的参数均为可序列化的python内置类型
 
+在调用前如果异步任务执行时会引用到刚变动的记录请执行下数据库commit使变动确实生效
+
 # Worker的运行
 参考如下task_worker.py 代码：
 ```python
