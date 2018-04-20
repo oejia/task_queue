@@ -51,7 +51,7 @@ from odoo.modules.registry import Registry
 def execute(conf_attrs, dbname, uid, obj, method, *args, **kwargs):
     _logger.info(str([dbname, uid, obj, method, args, kwargs]))
 
-    if conf_attrs:
+    if conf_attrs and len(conf_attrs.keys())>1:
         for attr, value in conf_attrs.items():
             odoo.tools.config[attr] = value
     with Environment.manage():
