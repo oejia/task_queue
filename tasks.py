@@ -59,6 +59,7 @@ def execute(conf_attrs, dbname, uid, obj, method, *args, **kwargs):
         cr = registry.cursor()
         context = 'context' in kwargs and kwargs.pop('context') or {}
         env = Environment(cr, uid, context)
+        cr.autocommit(True)
         # odoo.api.Environment._local.environments = env
         try:
             Model = env[obj]
@@ -71,7 +72,7 @@ def execute(conf_attrs, dbname, uid, obj, method, *args, **kwargs):
                 target = Model
             getattr(env.registry[obj], method)(target, *args, **kwargs)
             # Commit only when function finish
-            env.cr.commit()
+            # env.cr.commit()
         except Exception as exc:
             env.cr.rollback()
             import traceback;traceback.print_exc()
