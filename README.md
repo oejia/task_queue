@@ -1,5 +1,5 @@
 # task_queue
-Odoo async task module with celery
+Odoo async task with db store or celery
 
 # 安装
 - pip install celery==4.1.0
