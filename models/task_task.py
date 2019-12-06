@@ -4,6 +4,7 @@ import json
 import logging
 import traceback
 
+import odoo
 from odoo import _, models, fields, api
 from odoo.api import Environment
 
@@ -40,11 +41,11 @@ class TaskTask(models.Model):
     _inherit = ['oe.task.abstract']
 
 
-    @api.multi
-    def run(self):
-        for task in self:
-            task_args = json.loads(task.task_args)
-            task_kwargs = json.loads(task.task_kwargs)
+    #@api.multi
+    def run(self, tasks):
+        for task in tasks:
+            task_args = json.loads(task['task_args'])
+            task_kwargs = json.loads(task['task_kwargs'])
             dbname = task_args.pop(0)
             uid = task_args.pop(0)
             model_name = task_args.pop(0)
@@ -64,18 +65,31 @@ class TaskTask(models.Model):
                 env.cr.rollback()
                 trace = traceback.print_exc()
                 self.env['oe.task.result'].sudo().create({
-                    'task_id': task.id,
-                    'task_name': task.task_name,
-                    'task_args': task.task_args,
-                    'task_kwargs': task.task_kwargs,
+                    'task_id': task['id'],
+                    'task_name': task['task_name'],
+                    'task_args': task['task_args'],
+                    'task_kwargs': task['task_kwargs'],
                     'traceback': trace,
                 })
             finally:
-                task.unlink()
+                #task.unlink()
+                self.delete(task)
                 self.env.cr.commit()
 
+    def delete(self,task):
+        self.env.cr.execute('delete from oe_task where id=%s'%task['id'])
+
     def _process(self):
-        self.search([('status', '=', 'PENDING')]).run()
+        while True:
+            import time;time.sleep(2)
+            db = odoo.sql_db.db_connect(self.env.cr.dbname)
+            tasks = []
+            with db.cursor() as cr:
+                _logger.info('>>> _process tasks')
+                cr.execute("select * from oe_task where status='PENDING'")
+                tasks = cr.dictfetchall()
+            self.run(tasks)
+                #self.search([('status', '=', 'PENDING')]).run()
 
     @AsyncDB()
     @api.model
