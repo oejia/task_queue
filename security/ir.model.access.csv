@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_oe_task_group_system,oe_task.group_system,model_oe_task,base.group_system,1,1,1,1
+access_oe_task_result_group_system,oe_task_result.group_system,model_oe_task_result,base.group_system,1,1,1,1

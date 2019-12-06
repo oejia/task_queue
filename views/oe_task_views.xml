@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="oe_task_view_tree_1811" model="ir.ui.view">
+            <field name="name">oe.task.view_tree</field>
+            <field name="model">oe.task</field>
+            <field name="type">tree</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <tree string="Task">
+               <field name="task_id"/>
+               <field name="task_name"/>
+               <field name="task_args"/>
+               <field name="task_kwargs"/>
+               <field name="priority"/>
+               <field name="queue"/>
+               <field name="status"/>
+                </tree>
+            </field>
+        </record>
+        <record id="oe_task_view_form_1812" model="ir.ui.view">
+            <field name="name">oe.task.view_form</field>
+            <field name="model">oe.task</field>
+            <field name="type">form</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <form string="Task" version="7.0">
+                    <sheet>
+                    <group>
+               <field name="task_id"/>
+               <field name="task_name"/>
+               <field name="task_args"/>
+               <field name="task_kwargs"/>
+               <field name="priority"/>
+               <field name="queue"/>
+               <field name="status"/>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="oe_task_action_626" model="ir.actions.act_window">
+            <field name="name">Task</field>
+            <field name="res_model">oe.task</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('oe_task_view_tree_1811')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('oe_task_view_form_1812')}),
+                    ]"/>
+        </record>
+        <record id="ir_cron_task_queue_worker_ir_actions_server" model="ir.actions.server">
+            <field name="name">task_queue_worker</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_oe_task"></field>
+            <field name="binding_model_id" ref="model_oe_task"></field>
+            <field name="state">code</field>
+            <field name="code">model._process()</field>
+            <field name="usage">ir_cron</field>
+        </record>
+        <menuitem action="oe_task_action_626" id="oe_task_menuitem_478_1575611188" name="Task" parent="base.menu_custom" sequence="10"/>
+
+    </data>
+</openerp>
