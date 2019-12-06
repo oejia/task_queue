@@ -5,7 +5,7 @@
     ],
     'author': '',
     'data': [
-        #'data/ir_cron_datas.xml',
+        'data/ir_cron_datas.xml',
         'security/ir.model.access.csv',
 
         'views/oe_task_views.xml',
