@@ -69,6 +69,7 @@ class TaskTask(models.Model):
                     'task_name': task['task_name'],
                     'task_args': task['task_args'],
                     'task_kwargs': task['task_kwargs'],
+                    'status': 'FAILURE',
                     'traceback': trace,
                 })
             finally:

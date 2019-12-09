@@ -108,6 +108,8 @@ class Base(object):
                         obj_ids = obj.ids
                     elif api_name == 'one':
                         obj_ids = [obj.id]
+                    else:
+                        obj_ids = [obj.id]
                 else:
                     # 当为老API时
                     cr, uid, context = args[0].env.cr, args[0].env.uid, \
@@ -167,6 +169,7 @@ class Async(Base):
 class AsyncDB(Base):
 
     def gen_task(self, task_args, kwargs):
+        #_logger.info('>>> gen task %s %s', task_args, kwargs)
         odoo_conf_attrs = task_args[0]
         dbname = task_args[1]
         uid = task_args[2]
