@@ -5,17 +5,19 @@ Odoo async task with db store or celery
 1. 安装此模块 task_queue
 2. 将需要异步执行的方法加上装饰器
 ```python
-@Aysnc()
+from odoo.addons.task_queue.api import AysncDB
+
+@AysncDB()
 @api.model
 def func(self, a, b):
     pass
     
-@Aysnc()
+@AysncDB()
 @api.multi
 def func1(self, a, b):
     pass
     
-@Aysnc()
+@AysncDB()
 @api.one
 def func2(self, a, b):
     pass
