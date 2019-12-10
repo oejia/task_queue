@@ -85,7 +85,7 @@ class Base(object):
         token = sha1(f.__name__.encode('utf-8')).hexdigest()
 
         def f_job(*args, **kwargs):
-            _logger.info('>>>> call %s.%s %s %s'%(args[0]._name, f.__name__, str(args[1:]), str(kwargs)))
+            _logger.info('>>>> user %s call %s.%s %s %s'%(args[0].env.uid, args[0], f.__name__, str(args[1:]), str(kwargs)))
             if len(args) == 1 or args[-1] != token:
                 # 加入任务队列
                 args += (token,) # 普通参数尾部增加一个标志参数
