@@ -1,12 +1,35 @@
 # task_queue
 Odoo async task with db store or celery
 
-# 安装
+# 基于Odoo db的使用
+1. 安装此模块 task_queue
+2. 将需要异步执行的方法加上装饰器
+```
+@Aysnc()
+@api.model
+def func(self, a, b):
+    pass
+    
+@Aysnc()
+@api.multi
+def func1(self, a, b):
+    pass
+    
+@Aysnc()
+@api.one
+def func2(self, a, b):
+    pass
+```
+任务的执行默认在odoo的cron中，不需要额外的运行
+
+# 基于celery的使用
+
+## 安装
 - pip install celery==4.1.0
 - pip install sqlalchemy    (如果需要存储任务执行结果的话)
 - pip install redis    (如果使用redis作为消息存储后端)
 
-# 配置
+## 配置
 在 odoo 的 conf 配置文件中可用的配置项:
 ```config
 # 消息存储后端
@@ -22,7 +45,7 @@ celery_default_queue = odoo
 celery_queues = queue1, queue2, queue3
 ```
 
-# 使用
+## 使用
 ```python
 from odoo.addons.task_queue.api import Async
 
@@ -49,7 +72,7 @@ def func2(self, a, b):
 
 多进程worker同时跑时可能会出现odoo的事务错误，建议odoo中多使用autocommit=True的模式操作数据库
 
-# Worker的运行
+## Worker的运行
 参考如下task_worker.py 代码：
 ```python
 # coding=utf-8
