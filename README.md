@@ -4,7 +4,7 @@ Odoo async task with db store or celery
 # 基于Odoo db的使用
 1. 安装此模块 task_queue
 2. 将需要异步执行的方法加上装饰器
-```
+```python
 @Aysnc()
 @api.model
 def func(self, a, b):
