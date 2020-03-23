@@ -13,4 +13,4 @@ class TaskResult(models.Model):
 
     result = fields.Html(_('result'), default=None)
     date_done = fields.Datetime('done at', default=fields.Datetime.now)
-    traceback = fields.Html(_('traceback'))
+    traceback = fields.Text(_('traceback'))
