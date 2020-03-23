@@ -72,14 +72,13 @@ class TaskTask(models.Model):
                 env.cr.commit()
             except Exception as exc:
                 env.cr.rollback()
-                trace = traceback.print_exc()
                 self.env['oe.task.result'].sudo().create({
                     'task_id': task['id'],
                     'task_name': task['task_name'],
                     'task_args': task['task_args'],
                     'task_kwargs': task['task_kwargs'],
                     'status': 'FAILURE',
-                    'traceback': trace,
+                    'traceback': '{}'.format(traceback.format_exc()),
                 })
             finally:
                 #task.unlink()
@@ -110,3 +109,9 @@ class TaskTask(models.Model):
     @api.model
     def test_countdown(self):
         _logger.info('>>> It is time to do')
+
+    @AsyncDB()
+    @api.model
+    def test_trace_log(self):
+        d = {}
+        v = d['k']
