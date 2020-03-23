@@ -3,10 +3,12 @@
 import json
 import logging
 import traceback
+from datetime import datetime, timedelta
 
 import odoo
 from odoo import _, models, fields, api
 from odoo.api import Environment
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 
 from ..api import AsyncDB
 
@@ -32,6 +34,7 @@ class TaskAbstract(models.AbstractModel):
 
     priority = fields.Integer('priority')
     queue = fields.Char('queue')
+    countdown = fields.Integer('countdown', default=0)
 
 
 class TaskTask(models.Model):
@@ -51,6 +54,12 @@ class TaskTask(models.Model):
             model_name = task_args.pop(0)
             method = task_args.pop(0)
             ids = task_args.pop(0)
+
+            if task['countdown']>0:
+                _now = datetime.now()
+                if _now < task['create_date'] + timedelta(seconds=task['countdown']):
+                    _logger.info('>>> It is not time yet')
+                    continue
 
             _context = 'context' in task_kwargs and task_kwargs.pop('context') or {}
             env = Environment(self.env.cr, uid, _context)
@@ -96,3 +105,8 @@ class TaskTask(models.Model):
     @api.model
     def get_count(self):
         _logger.info('>>> get_task_count result %s', self.search_count([]))
+
+    @AsyncDB(countdown=10)
+    @api.model
+    def test_countdown(self):
+        _logger.info('>>> It is time to do')

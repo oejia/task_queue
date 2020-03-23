@@ -181,5 +181,6 @@ class AsyncDB(Base):
             'task_name': '%s.%s()'%(model_name, method),
             'task_args': json.dumps(task_args[1:]),
             'task_kwargs': json.dumps(kwargs),
+            'countdown': self.countdown,
         })
         return task
