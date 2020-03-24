@@ -53,15 +53,6 @@
                           (0, 0, {'view_mode': 'form', 'view_id': ref('oe_task_view_form_1812')}),
                     ]"/>
         </record>
-        <record id="ir_cron_task_queue_worker_ir_actions_server" model="ir.actions.server">
-            <field name="name">task_queue_worker</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_oe_task"></field>
-            <field name="binding_model_id" ref="model_oe_task"></field>
-            <field name="state">code</field>
-            <field name="code">model._process()</field>
-            <field name="usage">ir_cron</field>
-        </record>
         <menuitem action="oe_task_action_626" id="oe_task_menuitem_478_1575611188" name="Task" parent="base.menu_custom" sequence="10"/>
 
     </data>
