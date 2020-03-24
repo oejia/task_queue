@@ -96,7 +96,8 @@ class Base(object):
                 arglist = list(args)
 
                 obj_ids = None
-                if argspecargs[1] not in ('cr', 'cursor') and hasattr(f, '_api'):
+                _logger.info('>>> argspecargs: %s hasattr api: %s', argspecargs, hasattr(f, '_api'))
+                if argspecargs[1] not in ('cr', 'cursor'):
                     # 当为新API时
                     cr, uid, context = _self.env.cr, _self.env.uid, dict(_self.env.context)
                     obj = arglist.pop(0)
