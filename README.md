@@ -21,6 +21,12 @@ def func1(self, a, b):
 @api.one
 def func2(self, a, b):
     pass
+
+@AsyncDB(countdown=10*60)
+@api.model
+def test_countdown(self):
+    # 将延迟10分钟执行
+    _logger.info('>>> It is time to do')
 ```
 任务的执行默认在odoo的cron中，不需要额外的运行
 
