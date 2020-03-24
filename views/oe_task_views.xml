@@ -15,6 +15,7 @@
                <field name="task_kwargs"/>
                <field name="priority"/>
                <field name="queue"/>
+               <field name="countdown"/>
                <field name="status"/>
                 </tree>
             </field>
