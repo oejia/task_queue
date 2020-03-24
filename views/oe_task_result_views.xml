@@ -29,6 +29,9 @@
             <field name="priority">999</field>
             <field name="arch" type="xml">
                 <form string="Task Result" version="7.0" edit="0" create="0" delete="0">
+                    <header>
+		        <button name="re_execute" type="object" string="重新执行" attrs="{'invisible':[('status','=', 'RETRY')]}"/>
+                    </header>
                     <sheet>
                     <group>
                <field name="task_id"/>
