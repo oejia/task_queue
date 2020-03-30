@@ -58,7 +58,6 @@ class TaskTask(models.Model):
             if task['countdown']>0:
                 _now = datetime.now()
                 if _now < task['create_date'] + timedelta(seconds=task['countdown']):
-                    _logger.info('>>> It is not time yet')
                     continue
 
             _context = 'context' in task_kwargs and task_kwargs.pop('context') or {}
@@ -94,7 +93,6 @@ class TaskTask(models.Model):
             db = odoo.sql_db.db_connect(self.env.cr.dbname)
             tasks = []
             with db.cursor() as cr:
-                _logger.info('>>> _process tasks')
                 cr.execute("select * from oe_task where status='PENDING'")
                 tasks = cr.dictfetchall()
             self.run(tasks)
