@@ -44,7 +44,6 @@ class TaskTask(models.Model):
     _inherit = ['oe.task.abstract']
 
 
-    #@api.multi
     def run(self, tasks):
         for task in tasks:
             task_args = json.loads(task['task_args'])
@@ -96,7 +95,7 @@ class TaskTask(models.Model):
                 cr.execute("select * from oe_task where status='PENDING'")
                 tasks = cr.dictfetchall()
             self.run(tasks)
-                #self.search([('status', '=', 'PENDING')]).run()
+            break
 
     @AsyncDB()
     @api.model
