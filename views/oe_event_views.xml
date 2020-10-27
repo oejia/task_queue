@@ -27,6 +27,7 @@
                     <group>
                <field name="model_id"/>
                <field name="etype"/>
+               <field name="field_ids" domain="[('model_id', '=', model_id)]" widget="many2many_tags"/>
                <field name="subscribe_ids"/>
                <field name="enable"/>
                     </group>

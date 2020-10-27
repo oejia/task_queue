@@ -16,6 +16,7 @@ class OeEvent(models.Model):
     _description = u'事件'
 
     model_id = fields.Many2one('ir.model', string='模型', required=True)
+    field_ids = fields.Many2many('ir.model.fields', string='监听字段')
     etype = fields.Selection([('create', '创建'), ('write',u'更新'),('unlink',u'删除')], string=u'事件类型', required=True)
     enable = fields.Boolean('启用', default=False)
     subscribe_ids = fields.One2many('oe.event.subscribe', 'event_id', string='事件订阅')
@@ -46,12 +47,27 @@ class OeEvent(models.Model):
 
         @api.multi
         def event_write(self, vals, **kwargs):
-            old_vals_map = {e.id : e.read(vals.keys())[0] for e in self.sudo()}
-            res = event_write.origin(self, vals, **kwargs)
-            for res in self.sudo():
-                old_vals = old_vals_map.get(res.id)
-                self.env['oe.event'].sudo().browse(event_obj_id).execute_write(res.id, old_vals, vals)
-            return res
+            event_obj = self.env['oe.event'].sudo().browse(event_obj_id)
+            field_list = [e.name for e in event_obj.field_ids]
+            flag = False
+            if field_list:
+                for k in vals.keys():
+                    if k in field_list:
+                        flag = True
+                        break
+            else:
+                flag = True
+
+            if flag:
+                old_vals_map = {e.id : e.read(vals.keys())[0] for e in self.sudo()}
+                res = event_write.origin(self, vals, **kwargs)
+                for res in self.sudo():
+                    old_vals = old_vals_map.get(res.id)
+                    event_obj.execute_write(res.id, old_vals, vals)
+                return res
+            else:
+                return event_write.origin(self, vals, **kwargs)
+
         return event_write
 
     def _make_unlink(self):
