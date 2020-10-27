@@ -2,3 +2,6 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
 access_oe_task_group_system,oe_task.group_system,model_oe_task,base.group_system,1,1,1,1
 access_oe_task_result_group_system,oe_task_result.group_system,model_oe_task_result,base.group_system,1,1,1,1
+access_oe_event_group_system,oe_event.group_system,model_oe_event,base.group_system,1,1,1,1
+access_oe_event_subscribe_group_system,oe_event_subscribe.group_system,model_oe_event_subscribe,base.group_system,1,1,1,1
+access_oe_event_log_group_system,oe_event_log.group_system,model_oe_event_log,base.group_system,1,1,1,1
