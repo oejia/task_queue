@@ -63,7 +63,19 @@ class OeEvent(models.Model):
                 res = event_write.origin(self, vals, **kwargs)
                 for res in self.sudo():
                     old_vals = old_vals_map.get(res.id)
-                    event_obj.execute_write(res.id, old_vals, vals)
+                    record_flag = False
+                    if field_list:
+                        for _field in field_list:
+                            old_val = old_vals[_field]
+                            if type(old_val) in [list, tuple]:
+                                old_val = old_val[0]
+                            if vals[_field]!=old_val:
+                                record_flag = True
+                                break
+                    else:
+                        record_flag = True
+                    if record_flag:
+                        event_obj.execute_write(res.id, old_vals, vals)
                 return res
             else:
                 return event_write.origin(self, vals, **kwargs)
