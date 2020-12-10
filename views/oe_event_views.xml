@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="oe_event_view_tree_2533" model="ir.ui.view">
+            <field name="name">oe.event.view_tree</field>
+            <field name="model">oe.event</field>
+            <field name="type">tree</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <tree string="事件">
+               <field name="model_id"/>
+               <field name="etype"/>
+               <field name="subscribe_ids"/>
+               <field name="enable"/>
+                </tree>
+            </field>
+        </record>
+        <record id="oe_event_view_form_2534" model="ir.ui.view">
+            <field name="name">oe.event.view_form</field>
+            <field name="model">oe.event</field>
+            <field name="type">form</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <form string="事件" version="7.0">
+                    <sheet>
+                    <group>
+               <field name="model_id"/>
+               <field name="etype"/>
+               <field name="field_ids" domain="[('model_id', '=', model_id)]" widget="many2many_tags"/>
+               <field name="subscribe_ids"/>
+               <field name="enable"/>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="oe_event_action_1146" model="ir.actions.act_window">
+            <field name="name">事件</field>
+            <field name="res_model">oe.event</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('oe_event_view_tree_2533')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('oe_event_view_form_2534')}),
+                    ]"/>
+        </record>
+        <menuitem action="oe_event_action_1146" id="oe_event_menuitem_751_1603789992" name="事件" parent="base.menu_custom" sequence="10"/>
+
+    </data>
+</openerp>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="oe_event_log_action_server_1147" model="ir.actions.server">
+            <field name="name">Test</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_oe_event_log"></field>
+            <field name="binding_model_id" ref="model_oe_event_log"></field>
+            <field name="state">code</field>
+            <field name="code"># Available variables:
+#  - env: Odoo Environment on which the action is triggered
+#  - model: Odoo Model of the record on which the action is triggered; is a void recordset
+#  - record: record on which the action is triggered; may be void
+#  - records: recordset of all records on which the action is triggered in multi-mode; may be void
+#  - time, datetime, dateutil, timezone: useful Python libraries
+#  - log: log(message, level='info'): logging function to record debug information in ir.logging table
+#  - Warning: Warning Exception to use with raise
+# To return an action, assign: action = {...}
+log('>>>>---------------go', level='info')
+
+
+</field>
+            <field name="usage">ir_actions_server</field>
+        </record>
+        <record id="oe_event_log_action_server_1149" model="ir.actions.server">
+            <field name="name">test unlink</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_oe_event_log"></field>
+            <field name="binding_model_id" ref="model_oe_event_log"></field>
+            <field name="state">code</field>
+            <field name="code"># Available variables:
+#  - env: Odoo Environment on which the action is triggered
+#  - model: Odoo Model of the record on which the action is triggered; is a void recordset
+#  - record: record on which the action is triggered; may be void
+#  - records: recordset of all records on which the action is triggered in multi-mode; may be void
+#  - time, datetime, dateutil, timezone: useful Python libraries
+#  - log: log(message, level='info'): logging function to record debug information in ir.logging table
+#  - Warning: Warning Exception to use with raise
+# To return an action, assign: action = {...}
+log('>>>>---------------go unlink', level='info')
+
+
+</field>
+            <field name="usage">ir_actions_server</field>
+        </record>
+        <record id="oe_event_log_action_server_1148" model="ir.actions.server">
+            <field name="name">test write</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_oe_event_log"></field>
+            <field name="binding_model_id" ref="model_oe_event_log"></field>
+            <field name="state">code</field>
+            <field name="code"># Available variables:
+#  - env: Odoo Environment on which the action is triggered
+#  - model: Odoo Model of the record on which the action is triggered; is a void recordset
+#  - record: record on which the action is triggered; may be void
+#  - records: recordset of all records on which the action is triggered in multi-mode; may be void
+#  - time, datetime, dateutil, timezone: useful Python libraries
+#  - log: log(message, level='info'): logging function to record debug information in ir.logging table
+#  - Warning: Warning Exception to use with raise
+# To return an action, assign: action = {...}
+log('>>>>---------------%s %s %s '%(record.get_res(), record.get_old(), record.get_new()), level='info')
+
+
+
+</field>
+            <field name="usage">ir_actions_server</field>
+        </record>
+
+    </data>
+</openerp>

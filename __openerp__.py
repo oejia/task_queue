@@ -11,6 +11,8 @@
         'views/oe_task_views.xml',
         'views/oe_task_result_views.xml',
         #'views/task_result_views.xml',
+        'views/oe_event_views.xml',
+        'views/oe_event_subscribe_views.xml',
     ],
     'installable': True,
     'application': False,

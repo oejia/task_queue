@@ -2,7 +2,7 @@
 <odoo>
     <data noupdate="1">
     <record id="ir_cron_task_queue_worker" model="ir.cron">
-        <field name="name">task_queue_worker</field>
+        <field name="name">Task Queue Worker</field>
         <field name="interval_number">1</field>
         <field name="interval_type">minutes</field>
         <field name="numbercall">-1</field>

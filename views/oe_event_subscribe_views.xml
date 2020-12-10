@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="oe_event_subscribe_view_tree_2535" model="ir.ui.view">
+            <field name="name">oe.event.subscribe.view_tree</field>
+            <field name="model">oe.event.subscribe</field>
+            <field name="type">tree</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <tree string="事件订阅">
+               <field name="action_server_id"/>
+               <field name="domain"/>
+               <field name="enable"/>
+                </tree>
+            </field>
+        </record>
+        <record id="oe_event_subscribe_view_form_2536" model="ir.ui.view">
+            <field name="name">oe.event.subscribe.view_form</field>
+            <field name="model">oe.event.subscribe</field>
+            <field name="type">form</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <form string="事件订阅" version="7.0">
+                    <sheet>
+                    <group>
+               <field name="action_server_id"/>
+               <field name="domain"/>
+               <field name="enable"/>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>
