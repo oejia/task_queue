@@ -15,7 +15,7 @@ class OeEvent(models.Model):
     _name = 'oe.event'
     _description = u'事件'
 
-    model_id = fields.Many2one('ir.model', string='模型', required=True)
+    model_id = fields.Many2one('ir.model', string='模型')
     field_ids = fields.Many2many('ir.model.fields', string='监听字段')
     etype = fields.Selection([('create', '创建'), ('write',u'更新'),('unlink',u'删除')], string=u'事件类型', required=True)
     enable = fields.Boolean('启用', default=False)
