@@ -2,6 +2,7 @@
 
 import logging
 import json
+import datetime
 
 from odoo import _, models, fields, api
 from odoo import modules
@@ -9,6 +10,15 @@ from odoo import modules
 from ..api import AsyncDB
 
 _logger = logging.getLogger(__name__)
+
+
+class DateEncoder(json.JSONEncoder):
+
+    def default(self, obj):
+        if isinstance(obj,datetime.datetime):
+            return obj.strftime("%Y-%m-%d %H:%M:%S")
+        else:
+            return json.JSONEncoder.default(self,obj)
 
 class OeEvent(models.Model):
 
@@ -37,7 +47,7 @@ class OeEvent(models.Model):
         def event_create(self, vals_list, **kwargs):
             new_records = event_create.origin(self, vals_list, **kwargs)
             for i in range(len(vals_list)):
-                self.env['oe.event'].sudo().browse(event_obj_id).execute_create(new_records[i].id, vals_list[i])
+                self.env['oe.event'].sudo().browse(event_obj_id).execute_create(new_records[i].id, json.dumps(vals_list[i], cls=DateEncoder))
             return new_records
         return event_create
 
@@ -75,7 +85,7 @@ class OeEvent(models.Model):
                     else:
                         record_flag = True
                     if record_flag:
-                        event_obj.execute_write(res.id, old_vals, vals)
+                        event_obj.execute_write(res.id, json.dumps(old_vals, cls=DateEncoder), json.dumps(vals, cls=DateEncoder))
                 return res
             else:
                 return event_write.origin(self, vals, **kwargs)
@@ -122,7 +132,7 @@ class OeEvent(models.Model):
                     'res_model': subscribe.event_id.model_id.model,
                     'res_id': res_id,
                     'etype': subscribe.event_id.etype,
-                    'new_vals': json.dumps(vals),
+                    'new_vals': vals,
                 })
                 self.exec_server_action(log, subscribe.action_server_id)
 
@@ -136,8 +146,8 @@ class OeEvent(models.Model):
                     'res_model': subscribe.event_id.model_id.model,
                     'res_id': res_id,
                     'etype': subscribe.event_id.etype,
-                    'old_vals': json.dumps(old_vals),
-                    'new_vals': json.dumps(new_vals),
+                    'old_vals': old_vals,
+                    'new_vals': new_vals,
                 })
                 self.exec_server_action(log, subscribe.action_server_id)
 
