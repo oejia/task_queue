@@ -173,13 +173,9 @@ class OeEvent(models.Model):
             'active_ids': [log.id],
             'active_model': 'oe.event.log',
         })
-        self.env.cr.commit()
-        try:
-            action.with_env(self.env(user=self.env.ref('base.user_admin'))).with_context(new_context).run()
-        except:
-            self.env.cr.rollback()
-            import traceback;traceback.print_exc()
-        self.env.cr.commit()
+        #self.env.cr.commit()
+        action.sudo().with_context(new_context).run()
+        #self.env.cr.commit()
 
     @api.multi
     def _revert_methods(self):
