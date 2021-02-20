@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import datetime
 from hashlib import sha1
 from inspect import getargspec
 from odoo.tools import config
@@ -10,6 +11,16 @@ _logger = logging.getLogger(__name__)
 celery_default_queue = config.get('celery_default_queue', 'odoo')
 
 enqueue_fail_then_exec = False
+
+class DateEncoder(json.JSONEncoder):
+
+    def default(self, obj):
+        if isinstance(obj,datetime.datetime):
+            return obj.strftime("%Y-%m-%d %H:%M:%S")
+        elif isinstance(obj, datetime.date):
+            return obj.strftime("%Y-%m-%d")
+        else:
+            return json.JSONEncoder.default(self,obj)
 
 class _CeleryTask(object):
 
@@ -180,8 +191,8 @@ class AsyncDB(Base):
         task = self.env['oe.task'].sudo().create({
             'task_id': '',
             'task_name': '%s.%s()'%(model_name, method),
-            'task_args': json.dumps(task_args[1:]),
-            'task_kwargs': json.dumps(kwargs),
+            'task_args': json.dumps(task_args[1:], cls=DateEncoder),
+            'task_kwargs': json.dumps(kwargs, cls=DateEncoder),
             'countdown': self.countdown,
         })
         return task
