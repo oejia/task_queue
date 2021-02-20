@@ -116,12 +116,7 @@ class Base(object):
                         api_name = f._api.__name__
                     except:
                         api_name = f._api
-                    if api_name == 'multi':
-                        obj_ids = obj.ids
-                    elif api_name == 'one':
-                        obj_ids = [obj.id]
-                    else:
-                        obj_ids = [obj.id]
+                    obj_ids = obj.ids
                 else:
                     # 当为老API时
                     cr, uid, context = args[0].env.cr, args[0].env.uid, \
