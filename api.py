@@ -112,10 +112,6 @@ class Base(object):
                     # 当为新API时
                     cr, uid, context = _self.env.cr, _self.env.uid, dict(_self.env.context)
                     obj = arglist.pop(0)
-                    try:
-                        api_name = f._api.__name__
-                    except:
-                        api_name = f._api
                     obj_ids = obj.ids
                 else:
                     # 当为老API时
