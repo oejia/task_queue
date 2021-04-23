@@ -7,11 +7,10 @@
         <field name="interval_type">minutes</field>
         <field name="numbercall">-1</field>
         <field name="doall" eval="False"/>
-        <field name="model_id" ref="model_oe_task"/>
-        <field name="code">model._process()</field>
-        <field name="state">code</field>
+	<field name="model">oe.task</field>
+	<field name="function">_process</field>
+	<field name="args">()</field>
         <field name="user_id" ref="base.user_root"/>
-        <field name="activity_user_type">specific</field>
     </record>
     </data>
 </odoo>

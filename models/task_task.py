@@ -56,6 +56,8 @@ class TaskTask(models.Model):
 
             if task['countdown']>0:
                 _now = datetime.now()
+                if not isinstance(task['create_date'], datetime):
+                    task['create_date'] = datetime.strptime(task['create_date'][:19], DATETIME_FORMAT)
                 if _now < task['create_date'] + timedelta(seconds=task['countdown']):
                     continue
 
