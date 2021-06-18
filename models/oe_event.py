@@ -47,7 +47,7 @@ class OeEvent(models.Model):
         def event_create(self, vals_list, **kwargs):
             new_records = event_create.origin(self, vals_list, **kwargs)
             for i in range(len(vals_list)):
-                self.env['oe.event'].sudo().browse(event_obj_id).execute_create(new_records[i].id, json.dumps(vals_list[i], cls=DateEncoder))
+                self.env(user=1)['oe.event'].browse(event_obj_id).execute_create(new_records[i].id, json.dumps(vals_list[i], cls=DateEncoder))
             return new_records
         return event_create
 
@@ -57,7 +57,7 @@ class OeEvent(models.Model):
 
         @api.multi
         def event_write(self, vals, **kwargs):
-            event_obj = self.env['oe.event'].sudo().browse(event_obj_id)
+            event_obj = self.env(user=1)['oe.event'].browse(event_obj_id)
             field_list = [e.name for e in event_obj.field_ids]
             flag = False
             if field_list:
@@ -100,7 +100,7 @@ class OeEvent(models.Model):
         def event_unlink(self, **kwargs):
             res = event_unlink.origin(self, **kwargs)
             for res in self.sudo():
-                self.env['oe.event'].sudo().browse(event_obj_id).execute_unlink(res.id)
+                self.env(user=1)['oe.event'].browse(event_obj_id).execute_unlink(res.id)
             return res
         return event_unlink
 
