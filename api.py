@@ -120,7 +120,7 @@ class Base(object):
                     #arglist.pop(0)  # Remove self
                     #cr = arglist.pop(0)
                     #uid = arglist.pop(0)
-                kwargs['context'] = context
+                kwargs['context'] = { k: v for k,v in context.items() if not hasattr(v, '_name') }
 
                 dbname = cr.dbname
                 fname = f.__name__
