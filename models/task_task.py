@@ -65,7 +65,7 @@ class TaskTask(models.Model):
             Model = env[model_name]
 
             try:
-                objs = Model.search([('id', 'in', ids)])
+                objs = Model.sudo().search([('id', 'in', ids)])
                 getattr(env.registry[model_name], method)(objs, *task_args, **task_kwargs)
                 env.cr.commit()
             except Exception as exc:
