@@ -20,7 +20,11 @@ class DateEncoder(json.JSONEncoder):
         elif isinstance(obj, datetime.date):
             return obj.strftime("%Y-%m-%d")
         else:
-            return json.JSONEncoder.default(self,obj)
+            try:
+                return json.JSONEncoder.default(self,obj)
+            except:
+                import traceback;traceback.print_exc()
+                return str(obj)
 
 class _CeleryTask(object):
 
