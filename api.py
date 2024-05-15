@@ -108,9 +108,9 @@ class Base(object):
                 self.env = _self.env
                 model_name = _self._name # 第一个参数为 self
                 argspec = inspect.getfullargspec(f)
-                args = argspec.args if argspec.args else []
-                args += [None] * 4
-                argspecargs = tuple(args)
+                argspec_args = argspec.args if argspec.args else []
+                argspec_args += [None] * 4
+                argspecargs = tuple(argspec_args)
                 arglist = list(args)
 
                 obj_ids = None
