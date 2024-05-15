@@ -3,7 +3,7 @@
 import json
 import datetime
 from hashlib import sha1
-from inspect import getargspec
+import inspect
 from odoo.tools import config
 import logging
 
@@ -107,7 +107,10 @@ class Base(object):
                 _self = args[0]
                 self.env = _self.env
                 model_name = _self._name # 第一个参数为 self
-                argspecargs = tuple(getargspec(f).args) + (None,) * 4
+                argspec = inspect.getfullargspec(f)
+                args = argspec.args if argspec.args else []
+                args += [None] * 4
+                argspecargs = tuple(args)
                 arglist = list(args)
 
                 obj_ids = None
