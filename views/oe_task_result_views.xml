@@ -83,7 +83,7 @@
                             <page string="执行结果" invisible="status!='SUCCESS'">
                <field name="result"/>
                             </page>
-                            <page string="错误信息"  invisible="status!='FAILURE' and status!='RETRY'">13.0
+                            <page string="错误信息"  invisible="status!='FAILURE' and status!='RETRY'">
                <field name="traceback"/>
                             </page>
                         </notebook>
@@ -151,7 +151,7 @@
                         <button name="view_result" type="object"
                                 string="查看结果"
                                 class="oe_highlight"
-                                attrs="{'invisible':[('status','!=','SUCCESS')]}"/>
+                                invisible="status!='SUCCESS'"/>
                         <field name="status" widget="statusbar" statusbar_visible="SUCCESS,FAILURE"/>
                     </header>
                     <sheet>
@@ -164,10 +164,7 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="执行结果" attrs="{'invisible':[('status','!=','SUCCESS')]}">
-                                <field name="result" readonly="1"/>
-                            </page>
-                            <page string="错误信息" attrs="{'invisible':[('status','!=','FAILURE')]}">
+                            <page string="错误信息" invisible="status!='FAILURE'">
                                 <field name="traceback" readonly="1"/>
                             </page>
                         </notebook>
