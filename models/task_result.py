@@ -21,6 +21,7 @@ class TaskResult(models.Model):
             task = self.env['oe.task'].sudo().create({
                 'task_id': '',
                 'task_name': obj.task_name,
+                'task_doc': obj.task_doc,
                 'task_args': obj.task_args,
                 'task_kwargs': obj.task_kwargs,
                 'countdown': 0,

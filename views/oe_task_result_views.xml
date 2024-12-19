@@ -11,6 +11,7 @@
                 <tree string="Task Result" create="0" delete="0">
                <field name="task_id"/>
                <field name="task_name"/>
+               <field name="task_doc"/>
                <field name="task_args"/>
                <field name="task_kwargs"/>
                <field name="priority"/>
@@ -35,6 +36,7 @@
                     <group>
                <field name="task_id"/>
                <field name="task_name"/>
+               <field name="task_doc"/>
                <field name="task_args"/>
                <field name="task_kwargs"/>
                <field name="priority"/>
