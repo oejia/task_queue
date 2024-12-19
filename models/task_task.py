@@ -135,6 +135,14 @@ class TaskTask(models.Model):
         获取任务数量
         '''
         _logger.info('>>> get_task_count result %s', self.search_count([]))
+        domain = [('id', '<', 100)]
+        return {
+            'name': u'产品',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'tree',
+            'res_model': 'product.template',
+            'domain': domain,
+        }
 
     @AsyncDB(countdown=10)
     @api.model

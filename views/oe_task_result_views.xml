@@ -15,9 +15,9 @@
                     <filter string="重试" name="retry" domain="[('status', '=', 'RETRY')]"/>
                     <separator/>
                     <filter string="今天" name="today" 
-                        domain="[('date_done','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                        domain="[('create_date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
                     <filter string="本周" name="week"
-                        domain="[('date_done','&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                        domain="[('create_date','&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
                     <filter string="耗时>1分钟" name="long_execution" 
                             domain="[('execution_time', '>', 60)]"/>
                     <filter string="耗时>10秒" name="medium_execution"
