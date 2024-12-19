@@ -15,6 +15,20 @@ from ..api import AsyncDB
 
 _logger = logging.getLogger(__name__)
 
+class DateEncoder(json.JSONEncoder):
+
+    def default(self, obj):
+        if isinstance(obj,datetime.datetime):
+            return obj.strftime("%Y-%m-%d %H:%M:%S")
+        elif isinstance(obj, datetime.date):
+            return obj.strftime("%Y-%m-%d")
+        else:
+            try:
+                return json.JSONEncoder.default(self,obj)
+            except:
+                import traceback;traceback.print_exc()
+                return str(obj)
+
 class TaskAbstract(models.AbstractModel):
 
     _name = "oe.task.abstract"
