@@ -195,4 +195,12 @@ class AsyncDB(Base):
             'task_kwargs': json.dumps(kwargs, cls=DateEncoder),
             'countdown': self.countdown,
         })
+        self.env['oe.task.result'].sudo().create({
+            'task_id': task.id,
+            'task_name': task.task_name,
+            'task_doc': task.task_doc,
+            'task_args': task.task_args,
+            'task_kwargs': task.task_kwargs,
+            'countdown': task.countdown,
+        })
         return task
