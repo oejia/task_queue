@@ -102,5 +102,108 @@
         </record>
         <menuitem action="oe_task_result_action_627" id="oe_task_result_menuitem_479_1575611188" name="Task Result" parent="base.menu_custom" sequence="10"/>
 
+        <!-- 普通用户的任务执行记录视图 -->
+        <record id="oe_task_result_user_view_search" model="ir.ui.view">
+            <field name="name">oe.task.result.user.search</field>
+            <field name="model">oe.task.result</field>
+            <field name="arch" type="xml">
+                <search string="我的任务">
+                    <field name="task_doc" string="任务说明"/>
+                    <separator/>
+                    <filter string="执行成功" name="success" domain="[('status', '=', 'SUCCESS')]"/>
+                    <filter string="执行失败" name="failed" domain="[('status', '=', 'FAILURE')]"/>
+                    <separator/>
+                    <filter string="今天" name="today" 
+                        domain="[('create_date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                    <filter string="本周" name="week"
+                        domain="[('create_date','&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                    <filter string="耗时较长(>10秒)" name="long_execution"
+                        domain="[('execution_time', '>', 10)]"/>
+                    <group expand="1" string="分组">
+                        <filter string="执行状态" name="group_status" context="{'group_by': 'status'}"/>
+                        <filter string="创建日期" name="group_create" context="{'group_by': 'create_date:day'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="oe_task_result_user_view_tree" model="ir.ui.view">
+            <field name="name">oe.task.result.user.tree</field>
+            <field name="model">oe.task.result</field>
+            <field name="arch" type="xml">
+                <tree string="我的任务" create="0" delete="0">
+                    <field name="task_doc" string="任务说明"/>
+                    <field name="status" string="执行状态" decoration-success="status=='SUCCESS'" 
+                           decoration-danger="status=='FAILURE'" decoration-info="status=='RETRY'"/>
+                    <field name="create_date" string="创建时间"/>
+                    <field name="date_done" string="完成时间"/>
+                    <field name="execution_time" string="执行时长" widget="float_time"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="oe_task_result_user_view_form" model="ir.ui.view">
+            <field name="name">oe.task.result.user.form</field>
+            <field name="model">oe.task.result</field>
+            <field name="arch" type="xml">
+                <form string="任务详情" create="0" delete="0" edit="0">
+                    <header>
+                        <button name="view_result" type="object"
+                                string="查看结果"
+                                class="oe_highlight"
+                                attrs="{'invisible':[('status','!=','SUCCESS')]}"/>
+                        <field name="status" widget="statusbar" statusbar_visible="SUCCESS,FAILURE"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group string="基本信息">
+                                <field name="task_doc" string="任务说明"/>
+                                <field name="create_date" string="创建时间"/>
+                                <field name="date_done" string="完成时间"/>
+                                <field name="execution_time" string="执行时长" widget="float_time"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="执行结果" attrs="{'invisible':[('status','!=','SUCCESS')]}">
+                                <field name="result" readonly="1"/>
+                            </page>
+                            <page string="错误信息" attrs="{'invisible':[('status','!=','FAILURE')]}">
+                                <field name="traceback" readonly="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- 普通用户的任务执行记录操作窗口 -->
+        <record id="action_task_result_user" model="ir.actions.act_window">
+            <field name="name">我的任务</field>
+            <field name="res_model">oe.task.result</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('oe_task_result_user_view_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('oe_task_result_user_view_form')})]"/>
+            <field name="search_view_id" ref="oe_task_result_user_view_search"/>
+            <field name="context">{
+                'search_default_today': 1,
+                'search_default_group_status': 1
+            }</field>
+            <field name="domain">[('create_uid', '=', uid)]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    暂无任务执行记录
+                </p>
+            </field>
+        </record>
+
+        <!-- 添加菜单项 -->
+        <menuitem id="menu_task_result_user"
+            name="我的任务"
+            parent="base.menu_board_root"
+            action="action_task_result_user"
+            sequence="100"/>
+
     </data>
 </openerp>
