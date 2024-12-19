@@ -57,7 +57,7 @@
                     <header>
                         <button name="re_execute" type="object" 
                                 string="重新执行" 
-                                attrs="{'invisible':['|',('status','=','SUCCESS'),('status','=','RETRY')]}"/>
+                                invisible="status=='SUCCESS' or status=='RETRY'"/>
                         <field name="status" widget="statusbar" 
                                statusbar_visible="SUCCESS,FAILURE,RETRY"/>
                     </header>
@@ -76,10 +76,10 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="执行结果" attrs="{'invisible':[('status','!=','SUCCESS')]}">
+                            <page string="执行结果" invisible="status!='SUCCESS'">
                <field name="result"/>
                             </page>
-                            <page string="错误信息" attrs="{'invisible':[('status','!=','FAILURE'),('status','!=','RETRY')]}">
+                            <page string="错误信息"  invisible="status!='FAILURE' and status!='RETRY'">13.0
                <field name="traceback"/>
                             </page>
                         </notebook>
