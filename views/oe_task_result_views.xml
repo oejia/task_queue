@@ -73,7 +73,7 @@
                             <page string="执行结果" attrs="{'invisible':[('status','!=','SUCCESS')]}">
                <field name="result"/>
                             </page>
-                            <page string="错误信息" attrs="{'invisible':[('status','!=','FAILURE')]}">
+                            <page string="错误信息" attrs="{'invisible':[('status','!=','FAILURE'),('status','!=','RETRY')]}">
                <field name="traceback"/>
                             </page>
                         </notebook>
