@@ -15,6 +15,20 @@ from ..api import AsyncDB
 
 _logger = logging.getLogger(__name__)
 
+class DateEncoder(json.JSONEncoder):
+
+    def default(self, obj):
+        if isinstance(obj,datetime.datetime):
+            return obj.strftime("%Y-%m-%d %H:%M:%S")
+        elif isinstance(obj, datetime.date):
+            return obj.strftime("%Y-%m-%d")
+        else:
+            try:
+                return json.JSONEncoder.default(self,obj)
+            except:
+                import traceback;traceback.print_exc()
+                return str(obj)
+
 class TaskAbstract(models.AbstractModel):
 
     _name = "oe.task.abstract"
@@ -68,12 +82,22 @@ class TaskTask(models.Model):
             start_time = time.time()  # 记录开始时间
             try:
                 objs = Model.sudo().search([('id', 'in', ids)])
-                getattr(env.registry[model_name], method)(objs, *task_args, **task_kwargs)
+                result = getattr(env.registry[model_name], method)(objs, *task_args, **task_kwargs)
                 env.cr.commit()
                 execution_time = time.time() - start_time  # 计算执行时长
+                
+                # 序列化结果
+                try:
+                    result_json = json.dumps(result, cls=DateEncoder)
+                except Exception as e:
+                    result_json = json.dumps({
+                        'error': '执行结果无法序列化',
+                        'detail': str(e)
+                    })
+                
                 self.env['oe.task.result'].with_user(uid).sudo().search([('task_id', '=', task['id'])], limit=1).write({
                     'status': 'SUCCESS',
-                    'result': '执行成功',
+                    'result': result_json,
                     'date_done': fields.Datetime.now(),
                     'execution_time': execution_time,
                 })

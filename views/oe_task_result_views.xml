@@ -58,6 +58,10 @@
                         <button name="re_execute" type="object" 
                                 string="重新执行" 
                                 invisible="status=='SUCCESS' or status=='RETRY'"/>
+                        <button name="view_result" type="object"
+                                string="查看结果"
+                                class="oe_highlight"
+                                invisible="status!='SUCCESS'"/>
                         <field name="status" widget="statusbar" 
                                statusbar_visible="SUCCESS,FAILURE,RETRY"/>
                     </header>
