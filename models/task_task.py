@@ -4,6 +4,7 @@ import json
 import logging
 import traceback
 from datetime import datetime, timedelta
+import time
 
 import odoo
 from odoo import _, models, fields, api
@@ -64,10 +65,12 @@ class TaskTask(models.Model):
             env = Environment(self.env.cr, uid, _context)
             Model = env[model_name]
 
+            start_time = time.time()  # 记录开始时间
             try:
                 objs = Model.sudo().search([('id', 'in', ids)])
                 getattr(env.registry[model_name], method)(objs, *task_args, **task_kwargs)
                 env.cr.commit()
+                execution_time = time.time() - start_time  # 计算执行时长
                 self.env['oe.task.result'].sudo().create({
                     'task_id': task['id'],
                     'task_name': task['task_name'], 
@@ -77,8 +80,10 @@ class TaskTask(models.Model):
                     'status': 'SUCCESS',
                     'result': '执行成功',
                     'date_done': fields.Datetime.now(),
+                    'execution_time': execution_time,
                 })
             except Exception as exc:
+                execution_time = time.time() - start_time  # 失败时也记录执行时长
                 env.cr.rollback()
                 self.env['oe.task.result'].sudo().create({
                     'task_id': task['id'],
@@ -89,6 +94,7 @@ class TaskTask(models.Model):
                     'status': 'FAILURE',
                     'traceback': '{}'.format(traceback.format_exc()),
                     'date_done': fields.Datetime.now(),
+                    'execution_time': execution_time,
                 })
             finally:
                 self.delete(task)
