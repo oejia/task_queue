@@ -139,6 +139,12 @@ class OeEvent(models.Model):
     @AsyncDB()
     @api.multi
     def execute_write(self, res_id, old_vals, new_vals):
+        self.ensure_one()
+        if not self.env.user.has_group('base.group_system'):
+            raise AccessError(_("Only system users can execute events"))
+        # 验证输入
+        if not self._validate_vals(old_vals, new_vals):
+            raise ValidationError(_("Invalid values"))
         for obj in self:
             for subscribe in obj.subscribe_ids:
                 log = self.env['oe.event.log'].create({
