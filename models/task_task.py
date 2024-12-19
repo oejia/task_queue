@@ -71,7 +71,7 @@ class TaskTask(models.Model):
                 getattr(env.registry[model_name], method)(objs, *task_args, **task_kwargs)
                 env.cr.commit()
                 execution_time = time.time() - start_time  # 计算执行时长
-                self.env['oe.task.result'].sudo().create({
+                self.env['oe.task.result'].with_user(uid).sudo().create({
                     'task_id': task['id'],
                     'task_name': task['task_name'], 
                     'task_doc': task['task_doc'],
@@ -85,7 +85,7 @@ class TaskTask(models.Model):
             except Exception as exc:
                 execution_time = time.time() - start_time  # 失败时也记录执行时长
                 env.cr.rollback()
-                self.env['oe.task.result'].sudo().create({
+                self.env['oe.task.result'].with_user(uid).sudo().create({
                     'task_id': task['id'],
                     'task_name': task['task_name'],
                     'task_doc': task['task_doc'],
@@ -117,6 +117,9 @@ class TaskTask(models.Model):
     @AsyncDB()
     @api.model
     def get_count(self):
+        '''
+        获取任务数量
+        '''
         _logger.info('>>> get_task_count result %s', self.search_count([]))
 
     @AsyncDB(countdown=10)

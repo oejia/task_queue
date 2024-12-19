@@ -7,6 +7,7 @@
     'data': [
         'data/ir_cron_datas.xml',
         'security/ir.model.access.csv',
+        'security/ir_rule.xml',
 
         'views/oe_task_views.xml',
         'views/oe_task_result_views.xml',
