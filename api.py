@@ -131,7 +131,7 @@ class Base(object):
 
                 dbname = cr.dbname
                 fname = f.__name__
-                task_doc = f.__doc__
+                task_doc = f.__doc__ or f.__name__
                 # Pass OpenERP server config to the worker
                 odoo_conf_attrs = dict(
                     [(attr, value) for attr, value in config.options.items()]

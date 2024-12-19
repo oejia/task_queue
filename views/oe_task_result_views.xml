@@ -73,7 +73,7 @@
                             <page string="执行结果" invisible="status!='SUCCESS'">
                <field name="result"/>
                             </page>
-                            <page string="错误信息" invisible="status!='FAILURE'">
+                            <page string="错误信息"  invisible="status!='FAILURE' and status!='RETRY'">13.0
                <field name="traceback"/>
                             </page>
                         </notebook>
