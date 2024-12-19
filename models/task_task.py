@@ -130,7 +130,7 @@ class TaskTask(models.Model):
 
     @AsyncDB()
     @api.model
-    def get_count(self):
+    def get_count(self, a, b='second'):
         '''
         获取任务数量
         '''
