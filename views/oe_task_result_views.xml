@@ -48,7 +48,7 @@
             <field name="name">oe.task.result.form</field>
             <field name="model">oe.task.result</field>
             <field name="arch" type="xml">
-                <form string="Task Result" create="0" delete="0">
+                <form string="Task Result" create="0" delete="0" edit="0">
                     <header>
                         <button name="re_execute" type="object" 
                                 string="重新执行" 
