@@ -18,6 +18,10 @@
                         domain="[('date_done','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
                     <filter string="本周" name="week"
                         domain="[('date_done','&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                    <filter string="耗时>1分钟" name="long_execution" 
+                            domain="[('execution_time', '>', 60)]"/>
+                    <filter string="耗时>10秒" name="medium_execution"
+                            domain="[('execution_time', '>', 10)]"/>
                     <group expand="0" string="Group By">
                         <filter string="状态" name="group_status" context="{'group_by': 'status'}"/>
                         <filter string="任务" name="group_task" context="{'group_by': 'task_name'}"/>
@@ -38,6 +42,7 @@
                            decoration-danger="status=='FAILURE'" 
                            decoration-info="status=='RETRY'"/>
                     <field name="date_done"/>
+                    <field name="execution_time" widget="float_time"/>
                <field name="task_args"/>
                <field name="task_kwargs"/>
                 </tree>
@@ -62,6 +67,7 @@
                <field name="task_name"/>
                <field name="task_doc"/>
                                 <field name="date_done"/>
+                                <field name="execution_time" widget="float_time"/>
                             </group>
                             <group>
                                 <field name="task_id"/>
