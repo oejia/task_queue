@@ -68,12 +68,22 @@ class TaskTask(models.Model):
             start_time = time.time()  # 记录开始时间
             try:
                 objs = Model.sudo().search([('id', 'in', ids)])
-                getattr(env.registry[model_name], method)(objs, *task_args, **task_kwargs)
+                result = getattr(env.registry[model_name], method)(objs, *task_args, **task_kwargs)
                 env.cr.commit()
                 execution_time = time.time() - start_time  # 计算执行时长
+                
+                # 序列化结果
+                try:
+                    result_json = json.dumps(result, cls=DateEncoder)
+                except Exception as e:
+                    result_json = json.dumps({
+                        'error': '执行结果无法序列化',
+                        'detail': str(e)
+                    })
+                
                 self.env['oe.task.result'].with_user(uid).sudo().search([('task_id', '=', task['id'])], limit=1).write({
                     'status': 'SUCCESS',
-                    'result': '执行成功',
+                    'result': result_json,
                     'date_done': fields.Datetime.now(),
                     'execution_time': execution_time,
                 })
