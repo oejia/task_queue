@@ -138,6 +138,10 @@
                     <field name="create_date" string="创建时间"/>
                     <field name="date_done" string="完成时间"/>
                     <field name="execution_time" string="执行时长" widget="float_time"/>
+                    <button name="view_result" type="object" 
+                            string="查看结果" 
+                            icon="fa-external-link"
+                            attrs="{'invisible': [('status', '!=', 'SUCCESS')]}"/>
                 </tree>
             </field>
         </record>
@@ -198,9 +202,9 @@
         <!-- 添加菜单项 -->
         <menuitem id="menu_task_result_user"
             name="异步执行结果"
-            parent="base.menu_board_root"
+            parent="base.menu_custom"
             action="action_task_result_user"
-            sequence="100"/>
+            sequence="10"/>
 
     </data>
 </openerp>
