@@ -1,61 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record id="oe_task_result_view_search" model="ir.ui.view">
+            <field name="name">oe.task.result.search</field>
+            <field name="model">oe.task.result</field>
+            <field name="arch" type="xml">
+                <search string="Task Result">
+                    <field name="task_name"/>
+                    <field name="task_doc"/>
+                    <field name="task_id"/>
+                    <separator/>
+                    <filter string="成功" name="success" domain="[('status', '=', 'SUCCESS')]"/>
+                    <filter string="失败" name="failed" domain="[('status', '=', 'FAILURE')]"/>
+                    <filter string="重试" name="retry" domain="[('status', '=', 'RETRY')]"/>
+                    <separator/>
+                    <filter string="今天" name="today" 
+                        domain="[('date_done','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                    <filter string="本周" name="week"
+                        domain="[('date_done','&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="状态" name="group_status" context="{'group_by': 'status'}"/>
+                        <filter string="任务" name="group_task" context="{'group_by': 'task_name'}"/>
+                        <filter string="执行日期" name="group_date" context="{'group_by': 'date_done:day'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
 
         <record id="oe_task_result_view_tree_1813" model="ir.ui.view">
-            <field name="name">oe.task.result.view_tree</field>
+            <field name="name">oe.task.result.tree</field>
             <field name="model">oe.task.result</field>
-            <field name="type">tree</field>
-            <field name="priority">999</field>
             <field name="arch" type="xml">
                 <tree string="Task Result" create="0" delete="0">
-               <field name="task_id"/>
                <field name="task_name"/>
                <field name="task_doc"/>
+                    <field name="status" decoration-success="status=='SUCCESS'" 
+                           decoration-danger="status=='FAILURE'" 
+                           decoration-info="status=='RETRY'"/>
+                    <field name="date_done"/>
                <field name="task_args"/>
                <field name="task_kwargs"/>
-               <field name="priority"/>
-               <field name="queue"/>
-               <field name="status"/>
-               <field name="date_done"/>
-               <field name="result"/>
                 </tree>
             </field>
         </record>
+
         <record id="oe_task_result_view_form_1814" model="ir.ui.view">
-            <field name="name">oe.task.result.view_form</field>
+            <field name="name">oe.task.result.form</field>
             <field name="model">oe.task.result</field>
-            <field name="type">form</field>
-            <field name="priority">999</field>
             <field name="arch" type="xml">
-                <form string="Task Result" version="7.0" edit="0" create="0" delete="0">
+                <form string="Task Result" create="0" delete="0">
                     <header>
-		        <button name="re_execute" type="object" string="重新执行" attrs="{'invisible':[('status','=', 'RETRY')]}"/>
+                        <button name="re_execute" type="object" 
+                                string="重新执行" 
+                                attrs="{'invisible':['|',('status','=','SUCCESS'),('status','=','RETRY')]}"/>
+                        <field name="status" widget="statusbar" 
+                               statusbar_visible="SUCCESS,FAILURE,RETRY"/>
                     </header>
                     <sheet>
                     <group>
-               <field name="task_id"/>
+                            <group>
                <field name="task_name"/>
                <field name="task_doc"/>
+                                <field name="date_done"/>
+                            </group>
+                            <group>
+                                <field name="task_id"/>
                <field name="task_args"/>
                <field name="task_kwargs"/>
-               <field name="priority"/>
-               <field name="queue"/>
-               <field name="status"/>
-               <field name="date_done"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="执行结果" attrs="{'invisible':[('status','!=','SUCCESS')]}">
                <field name="result"/>
+                            </page>
+                            <page string="错误信息" attrs="{'invisible':[('status','!=','FAILURE')]}">
                <field name="traceback"/>
-                    </group>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
         </record>
+
         <record id="oe_task_result_action_627" model="ir.actions.act_window">
-            <field name="name">Task Result</field>
+            <field name="name">任务执行记录</field>
             <field name="res_model">oe.task.result</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="target">current</field>
+            <field name="search_view_id" ref="oe_task_result_view_search"/>
+            <field name="context">{'search_default_today':1}</field>
         </record>
         <menuitem action="oe_task_result_action_627" id="oe_task_result_menuitem_479_1575611188" name="Task Result" parent="base.menu_custom" sequence="10"/>
 

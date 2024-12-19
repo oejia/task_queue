@@ -62,13 +62,22 @@ class TaskTask(models.Model):
 
             _context = 'context' in task_kwargs and task_kwargs.pop('context') or {}
             env = Environment(self.env.cr, uid, _context)
-            #env = self.with_context().env
             Model = env[model_name]
 
             try:
                 objs = Model.sudo().search([('id', 'in', ids)])
                 getattr(env.registry[model_name], method)(objs, *task_args, **task_kwargs)
                 env.cr.commit()
+                self.env['oe.task.result'].sudo().create({
+                    'task_id': task['id'],
+                    'task_name': task['task_name'], 
+                    'task_doc': task['task_doc'],
+                    'task_args': task['task_args'],
+                    'task_kwargs': task['task_kwargs'],
+                    'status': 'SUCCESS',
+                    'result': '执行成功',
+                    'date_done': fields.Datetime.now(),
+                })
             except Exception as exc:
                 env.cr.rollback()
                 self.env['oe.task.result'].sudo().create({
@@ -79,9 +88,9 @@ class TaskTask(models.Model):
                     'task_kwargs': task['task_kwargs'],
                     'status': 'FAILURE',
                     'traceback': '{}'.format(traceback.format_exc()),
+                    'date_done': fields.Datetime.now(),
                 })
             finally:
-                #task.unlink()
                 self.delete(task)
                 self.env.cr.commit()
 
