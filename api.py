@@ -131,6 +131,7 @@ class Base(object):
 
                 dbname = cr.dbname
                 fname = f.__name__
+                task_doc = f.__doc__
                 # Pass OpenERP server config to the worker
                 odoo_conf_attrs = dict(
                     [(attr, value) for attr, value in config.options.items()]
@@ -144,7 +145,7 @@ class Base(object):
 
                 try:
                     #cr.commit()
-                    task = self.gen_task(task_args, kwargs)
+                    task = self.gen_task(task_args, kwargs, task_doc)
 
                     _logger.info('Enqueued task %s.%s%s on celery with id %s' % (model_name, fname, str(args[1:-1]), task and task.id))
                     return task and task.id or None
@@ -167,7 +168,7 @@ class Base(object):
 
 class Async(Base):
 
-    def gen_task(self, task_args, kwargs):
+    def gen_task(self, task_args, kwargs, task_doc):
         from .tasks import execute
         task = execute.apply_async(
             args=task_args, kwargs=kwargs,
@@ -178,7 +179,7 @@ class Async(Base):
 
 class AsyncDB(Base):
 
-    def gen_task(self, task_args, kwargs):
+    def gen_task(self, task_args, kwargs, task_doc):
         #_logger.info('>>> gen task %s %s', task_args, kwargs)
         odoo_conf_attrs = task_args[0]
         dbname = task_args[1]
@@ -189,6 +190,7 @@ class AsyncDB(Base):
         task = self.env['oe.task'].sudo().create({
             'task_id': '',
             'task_name': '%s.%s()'%(model_name, method),
+            'task_doc': task_doc,
             'task_args': json.dumps(task_args[1:], cls=DateEncoder),
             'task_kwargs': json.dumps(kwargs, cls=DateEncoder),
             'countdown': self.countdown,

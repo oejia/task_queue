@@ -20,6 +20,7 @@ class TaskAbstract(models.AbstractModel):
 
     task_id = fields.Char(_('task id'))
     task_name = fields.Char(_('task name'))
+    task_doc = fields.Char(_('task doc'))
     task_args = fields.Char(_('task arguments'))
     task_kwargs = fields.Char(_('task kwargs'))
 
@@ -73,6 +74,7 @@ class TaskTask(models.Model):
                 self.env['oe.task.result'].sudo().create({
                     'task_id': task['id'],
                     'task_name': task['task_name'],
+                    'task_doc': task['task_doc'],
                     'task_args': task['task_args'],
                     'task_kwargs': task['task_kwargs'],
                     'status': 'FAILURE',
