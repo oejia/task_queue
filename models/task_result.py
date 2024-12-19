@@ -11,6 +11,7 @@ class TaskResult(models.Model):
     _name = 'oe.task.result'
     _description = u'Task Result'
     _inherit = ['oe.task.abstract']
+    _rec_name = 'task_name'
 
     result = fields.Text(_('result'), default=None)
     date_done = fields.Datetime('done at')
@@ -69,3 +70,16 @@ class TaskResult(models.Model):
                     'type': 'danger',
                 }
             }
+
+    @api.multi
+    def name_get(self):
+        result = []
+        for record in self:
+            # 组合显示名称: 任务说明 - 任务名称 [状态]
+            name = "%s - %s [%s]" % (
+                record.task_doc or '',
+                record.task_name or '',
+                dict(self._fields['status'].selection).get(record.status, '')
+            )
+            result.append((record.id, name))
+        return result
